@@ -1,0 +1,4 @@
+-J-XX:+CMSClassUnloadingEnabled
+-J-XX:+UseConcMarkSweepGC
+-J-Xmx2096M
+-J-Xss256m

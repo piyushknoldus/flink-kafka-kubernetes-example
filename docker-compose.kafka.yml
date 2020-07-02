@@ -1,0 +1,48 @@
+version: '3.7'
+
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    networks:
+      - kafka
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka:2.12-2.2.2
+    ports:
+      - '9092:9092'
+      - '29092-29094:29092-29094'
+    environment:
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_HEAP_OPTS: "-Xms256M"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: "LISTENER_DOCKER://kafka:29092,LISTENER_HOST://kafka:9092"
+      KAFKA_ADVERTISED_LISTENERS: "LISTENER_DOCKER://kafka:29092,LISTENER_HOST://localhost:9092"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "LISTENER_DOCKER:PLAINTEXT,LISTENER_HOST:PLAINTEXT"
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_MAX_TIMEOUT_MS: 3600000
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - kafka
+    depends_on:
+      - zookeeper
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    restart: "no"
+    ports:
+      - "9001:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:29092"
+      JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
+    depends_on:
+      - kafka
+
+networks:
+  kafka:
+    driver: bridge

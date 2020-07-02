@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  flinkkafkademo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - src/resources/io/sophi/platform/realtime/transformers/tsv2json/.env
+    environment:
+      KAFKA_HOST: "lenses"
+      KAFKA_PORT: "9092"
+    entrypoint: "sbt run"
+    networks:
+      - streaming_lenses
+
+networks:
+  kubedockerexamples_lenses:
+    # Use a custom driver
+    external: true
