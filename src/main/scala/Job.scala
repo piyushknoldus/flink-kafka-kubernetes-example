@@ -57,11 +57,11 @@ object Job extends LazyLogging {
     KafkaProducer(
       config.output,
       config.kafka,
-      topicNameStrategy = config.output.topic.getOrElse(""),
+      topicNameStrategy = config.output.topic.getOrElse("outputtopic"),
       topic =>
         new KafkaSimpleSerializer[String](
           topic,
-          tsv => tsv.getBytes("UTF-8")
+          message => message.getBytes("UTF-8")
         )
     ) match {
       case Right(eventProducer) => eventProducer
@@ -74,7 +74,7 @@ object Job extends LazyLogging {
 
   def main(args: Array[String]) {
     val config = loadConfigOrFail("application.conf")
-    val jobName = "tsv2json"
+    val jobName = "flink-kafka-example"
     val env = createEnvOrFail(config, jobName)
 
     logger.info(
@@ -89,7 +89,7 @@ object Job extends LazyLogging {
     }
 
     inputStream
-      .map(events => events.toOption.asJson.noSpaces)
+      .map(events => events.toOption.get.msg)
       .addSink {
         createStringProducerOrFail(config, jobName)
       }

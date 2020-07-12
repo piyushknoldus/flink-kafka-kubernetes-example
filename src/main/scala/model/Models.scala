@@ -28,7 +28,8 @@ case class KafkaProducerConfig(
                                 lingerMs: Long,
                                 ack: String,
                                 writeTimestamp: Boolean,
-                                transactionTimeoutMs: Option[Int]
+                                transactionTimeoutMs: Option[Int],
+                                transactionalId: String
                               )
 
 case class JobConfig(

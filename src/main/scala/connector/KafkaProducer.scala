@@ -25,6 +25,7 @@ object KafkaProducer extends LazyLogging {
     prop.put(ProducerConfig.ACKS_CONFIG, String.valueOf(config.ack))
     prop.put(ProducerConfig.BUFFER_MEMORY_CONFIG, String.valueOf(config.bufferMemory))
     prop.put(ProducerConfig.LINGER_MS_CONFIG, String.valueOf(config.lingerMs))
+    prop.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, String.valueOf(config.transactionalId))
     config.transactionTimeoutMs.map(v => prop.put(ProducerConfig.TRANSACTION_TIMEOUT_CONFIG, String.valueOf(v)))
 
     val topicName = topicNameStrategy

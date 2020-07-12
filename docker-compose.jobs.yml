@@ -6,15 +6,15 @@ services:
       context: .
       dockerfile: Dockerfile
     env_file:
-      - src/resources/io/sophi/platform/realtime/transformers/tsv2json/.env
+      - src/main/resources/.env.example
     environment:
-      KAFKA_HOST: "lenses"
-      KAFKA_PORT: "9092"
+      KAFKA_HOST: "kafka"
+      KAFKA_PORT: "29092"
     entrypoint: "sbt run"
     networks:
-      - streaming_lenses
+      - flink-kafka-kubernetes-example_kafka
 
 networks:
-  kubedockerexamples_lenses:
+  flink-kafka-kubernetes-example_kafka:
     # Use a custom driver
     external: true

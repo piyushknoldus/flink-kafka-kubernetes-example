@@ -1,3 +1,5 @@
+package dummyproducer
+
 import java.time.Instant
 import java.util.Properties
 
@@ -38,11 +40,12 @@ object KafkaDummyProducer extends LazyLogging {
     val key = "key".getBytes
 
     for (value <- 1 to msgNo) {
+      Thread.sleep(1000)
       producer.send(
         new ProducerRecord[Array[Byte], Array[Byte]](
-          "enrichedGood",
+          "inputtopic",
           key,
-          sampleAppLogOne(value).toString.getBytes()
+          sampleAppLogOne(value).getBytes()
         )
       )
     }
