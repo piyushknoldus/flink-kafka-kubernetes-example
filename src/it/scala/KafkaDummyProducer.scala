@@ -1,5 +1,3 @@
-package dummyproducer
-
 import java.time.Instant
 import java.util.Properties
 

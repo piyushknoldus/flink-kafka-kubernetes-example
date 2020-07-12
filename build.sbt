@@ -33,12 +33,16 @@ val circe = Seq(
   "io.circe" %% "circe-parser"
 ).map(_ % circeVersion)
 
+val scalatest = Seq("org.scalatest" %% "scalatest" % "3.0.1"  % "it,test")
 
 lazy val root = (project in file(".")).
   settings(
+    Defaults.itSettings,
     libraryDependencies ++= flinkDependencies
       ++ loggingDeps
-      ++ configDeps ++ circe
+      ++ configDeps
+      ++ circe
+      ++ scalatest
   )
 
 assembly / mainClass := Some("Job")

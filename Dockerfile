@@ -12,6 +12,7 @@ RUN \
   apt-get install sbt && \
   sbt sbtVersion
 
+COPY . /workspace
 WORKDIR /workspace
 
 ENTRYPOINT sbt compile
