@@ -33,7 +33,7 @@ val circe = Seq(
   "io.circe" %% "circe-parser"
 ).map(_ % circeVersion)
 
-val scalatest = Seq("org.scalatest" %% "scalatest" % "3.0.1"  % "it,test")
+val scalatest = Seq("org.scalatest" %% "scalatest" % "3.0.1"  % "test")
 
 lazy val root = (project in file(".")).
   settings(

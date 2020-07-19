@@ -15,4 +15,4 @@ RUN \
 COPY . /workspace
 WORKDIR /workspace
 
-ENTRYPOINT sbt compile
+ENTRYPOINT sbt clean compile
