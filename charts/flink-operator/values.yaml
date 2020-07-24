@@ -13,7 +13,7 @@ rbac:
 
 # The defination of the operator image
 operatorImage:
-  name: gcr.io/flink-operator/flink-operator:latest 
+  name: surajsaini95/flink-operator
   pullPolicy: IfNotPresent
 
 serviceAccount:
@@ -21,7 +21,7 @@ serviceAccount:
   create: true
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name:
+  name: flink
 
 
 # Defines security context for operator container

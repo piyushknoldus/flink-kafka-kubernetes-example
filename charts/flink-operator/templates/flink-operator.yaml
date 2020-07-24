@@ -1,29 +1,10 @@
 {{- if .Values.rbac.create }}
----
-apiVersion: admissionregistration.k8s.io/v1beta1
-kind: MutatingWebhookConfiguration
+apiVersion: v1
+kind: Namespace
 metadata:
-  creationTimestamp: null
-  name: flink-operator-mutating-webhook-configuration
-webhooks:
-- clientConfig:
-    caBundle: Cg==
-    service:
-      name: flink-operator-webhook-service
-      namespace: {{ .Values.flinkOperatorNamespace }}
-      path: /mutate-flinkoperator-k8s-io-v1beta1-flinkcluster
-  failurePolicy: Fail
-  name: mflinkcluster.flinkoperator.k8s.io
-  rules:
-  - apiGroups:
-    - flinkoperator.k8s.io
-    apiVersions:
-    - v1beta1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - flinkclusters
+  labels:
+    control-plane: controller-manager
+  name: {{ .Values.flinkOperatorNamespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -96,18 +77,6 @@ rules:
   - deployments/status
   verbs:
   - get
-- apiGroups:
-  - apps
-  resources:
-  - controllerrevisions
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete    
 - apiGroups:
   - ""
   resources:
@@ -206,6 +175,30 @@ rules:
   - ingresses/status
   verbs:
   - get
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - validatingwebhookconfigurations
+  verbs:
+  - '*'
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - mutatingwebhookconfigurations
+  verbs:
+  - '*'
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -329,7 +322,6 @@ spec:
           name: https
       - args:
         - --metrics-addr=127.0.0.1:8080
-        - --watch-namespace=
         command:
         - /flink-operator
         image: {{ .Values.operatorImage.name }}
@@ -355,30 +347,4 @@ spec:
         secret:
           defaultMode: 420
           secretName: webhook-server-cert
----
-apiVersion: admissionregistration.k8s.io/v1beta1
-kind: ValidatingWebhookConfiguration
-metadata:
-  creationTimestamp: null
-  name: flink-operator-validating-webhook-configuration
-webhooks:
-- clientConfig:
-    caBundle: Cg==
-    service:
-      name: flink-operator-webhook-service
-      namespace: {{ .Values.flinkOperatorNamespace }}
-      path: /validate-flinkoperator-k8s-io-v1beta1-flinkcluster
-  failurePolicy: Fail
-  name: vflinkcluster.flinkoperator.k8s.io
-  rules:
-  - apiGroups:
-    - flinkoperator.k8s.io
-    apiVersions:
-    - v1beta1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - flinkclusters
 {{- end }}
-
