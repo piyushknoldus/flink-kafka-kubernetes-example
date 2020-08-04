@@ -4,7 +4,7 @@ metadata:
   name: flinkjobcluster-sample
 spec:
   image:
-    name: flink:1.8.2
+    name: flink:1.10.1-scala_2.12
   envVars:
     - name: CHECK_POINTING_PATH
       value: "file:///tmp/"
@@ -12,7 +12,6 @@ spec:
       value: "/opt/flink/"
     - name: KAFKA_HOST
       value: "kafka-host"
-      value: "500"
     - name: KAFKA_PORT
       value: "9094"
   jobManager:
@@ -23,11 +22,11 @@ spec:
         memory: "1024Mi"
         cpu: "200m"
   taskManager:
-    replicas: 2
+    replicas: 1
     resources:
       limits:
-        memory: "1024Mi"
-        cpu: "200m"
+        memory: "2048Mi"
+        cpu: "400m"
   job:
     jarFile: ./examples/streaming/WordCount.jar
     className: org.apache.flink.streaming.examples.wordcount.WordCount

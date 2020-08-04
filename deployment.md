@@ -34,13 +34,13 @@ Check their status
 
 
 ### Create Flink cluster and submit job
-`kubectl apply -f charts/flink-job-cluster/1topic2another.yaml`
+`kubectl apply -f charts/flink-job-cluster/1topic2another.yaml -n flink`
 
 Apply watch to see the pods related to flink cluster as they will be terminated once the job is completed. 
 
-`watch kubectl get po`
+`watch kubectl get po -n flink`
 
 Once the pod comes to the completed stage you can check the output of the job 
-`kubectl logs $(kubectl get po -o name | grep flinkjobcluster-sample-job) -f`
+`kubectl logs $(kubectl get po -o name -n flink | grep flinkjobcluster-sample-job) -n flink -f`
 
 

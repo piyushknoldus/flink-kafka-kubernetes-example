@@ -65,7 +65,7 @@ cp-kafka:
 ## Schema Registry
 ## ------------------------------------------------------
 cp-schema-registry:
-  enabled: true
+  enabled: false
   image: confluentinc/cp-schema-registry
   imageTag: 5.5.0
   ## Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace.
