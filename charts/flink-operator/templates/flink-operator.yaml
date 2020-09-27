@@ -1,10 +1,30 @@
 {{- if .Values.rbac.create }}
-apiVersion: v1
-kind: Namespace
+
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
 metadata:
-  labels:
-    control-plane: controller-manager
-  name: {{ .Values.flinkOperatorNamespace }}
+  creationTimestamp: null
+  name: flink-operator-mutating-webhook-configuration
+webhooks:
+- clientConfig:
+    caBundle: Cg==
+    service:
+      name: flink-operator-webhook-service
+      namespace: {{ .Values.flinkOperatorNamespace }}
+      path: /mutate-flinkoperator-k8s-io-v1beta1-flinkcluster
+  failurePolicy: Fail
+  name: mflinkcluster.flinkoperator.k8s.io
+  rules:
+  - apiGroups:
+    - flinkoperator.k8s.io
+    apiVersions:
+    - v1beta1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - flinkclusters
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -81,10 +101,25 @@ rules:
   - ""
   resources:
   - pods
+  - secrets
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - patch
+- apiGroups:
+  - apps
+  resources:
+  - controllerrevisions
   verbs:
   - get
   - list
   - watch
+  - create
+  - update
+  - patch
+  - delete
 - apiGroups:
   - ""
   resources:
@@ -176,29 +211,23 @@ rules:
   verbs:
   - get
 - apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - admissionregistration.k8s.io
-  resources:
-  - validatingwebhookconfigurations
-  verbs:
-  - '*'
-- apiGroups:
   - admissionregistration.k8s.io
   resources:
   - mutatingwebhookconfigurations
+  - validatingwebhookconfigurations
   verbs:
-  - '*'
+  - get
+  - create
+  - update
+  - patch
+- apiGroups:
+  - scheduling.volcano.sh
+  resources:
+  - podgroups
+  verbs:
+  - get
+  - create
+  - update
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -322,6 +351,7 @@ spec:
           name: https
       - args:
         - --metrics-addr=127.0.0.1:8080
+        - --watch-namespace=
         command:
         - /flink-operator
         image: {{ .Values.operatorImage.name }}
@@ -330,21 +360,53 @@ spec:
         - containerPort: 443
           name: webhook-server
           protocol: TCP
-        resources:
-          limits:
-            cpu: 100m
-            memory: 30Mi
-          requests:
-            cpu: 100m
-            memory: 20Mi
+        resources: {}
+#          limits:
+#            cpu: 100m
+#            memory: 30Mi
+#          requests:
+#            cpu: 100m
+#            memory: 20Mi
         volumeMounts:
         - mountPath: /tmp/k8s-webhook-server/serving-certs
           name: cert
           readOnly: true
       terminationGracePeriodSeconds: 10
+      imagePullSecrets:
+        - name: {{ .Values.operatorImage.imagePullSecrets }}
+{{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
       volumes:
       - name: cert
         secret:
           defaultMode: 420
           secretName: webhook-server-cert
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  creationTimestamp: null
+  name: flink-operator-validating-webhook-configuration
+webhooks:
+- clientConfig:
+    caBundle: Cg==
+    service:
+      name: flink-operator-webhook-service
+      namespace: {{ .Values.flinkOperatorNamespace }}
+      path: /validate-flinkoperator-k8s-io-v1beta1-flinkcluster
+  failurePolicy: Fail
+  name: vflinkcluster.flinkoperator.k8s.io
+  rules:
+  - apiGroups:
+    - flinkoperator.k8s.io
+    apiVersions:
+    - v1beta1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - flinkclusters
 {{- end }}
+

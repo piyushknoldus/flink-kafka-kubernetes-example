@@ -32,7 +32,7 @@ data:
     DNS.2 = ${service}.${namespace}
     DNS.3 = ${service}.${namespace}.svc
     EOF
-    openssl req -nodes -new -x509 -keyout ca.key -out ca.crt -subj "/CN=Admission Controller Webhook CA"
+    openssl req -nodes -new -x509 -days 3650 -keyout ca.key -out ca.crt -subj "/CN=Admission Controller Webhook CA"
     openssl genrsa -out ${tmpdir}/server-key.pem 2048
     openssl req -new -key ${tmpdir}/server-key.pem -subj "/CN=${service}.${namespace}.svc" -config ${tmpdir}/csr.conf \
         | openssl x509 -req -CA ca.crt -CAkey ca.key -CAcreateserial -out ${tmpdir}/server-cert.pem
