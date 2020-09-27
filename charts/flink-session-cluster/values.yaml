@@ -1,4 +1,4 @@
-name: flink-kafka-job-cluster
+name: flink-session-cluster
 image:
   repository: piyushdocker/flink_kakfa_kubeexample
   tag: latest
