@@ -36,3 +36,6 @@ Kafdrop URL - `http://localhost:9001/topic/outputtopic`
 2) Run the Job docker compose file
 
 `sudo docker-compose -f docker-compose.jobs.yml up`
+
+### TO deploy on Kubernetes 
+follow `deployment.md` file.

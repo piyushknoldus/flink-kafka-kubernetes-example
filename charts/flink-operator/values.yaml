@@ -11,7 +11,7 @@ replicas: 1
 rbac:
   create: true
 
-# The defination of the operator image
+# The definition of the operator image
 operatorImage:
   name: surajsaini95/flink-operator
   pullPolicy: IfNotPresent

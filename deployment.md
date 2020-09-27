@@ -28,13 +28,12 @@ Check their status
 ### Install chart for flink-operator
 `helm install flink-op charts/flink-operator`
 
-It takes approx. 5min to complete job reg. certs and ready the pods
 Check their status 
 `kubectl get po -n flink`
 
 
 ### Create Flink cluster and submit job
-`kubectl apply -f charts/flink-job-cluster/1topic2another.yaml -n flink`
+`kubectl apply -f charts/flink-job-cluster/flink-kafka-kube.yaml -n flink`
 
 Apply watch to see the pods related to flink cluster as they will be terminated once the job is completed. 
 

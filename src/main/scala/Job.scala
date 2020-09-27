@@ -9,12 +9,11 @@ import connector.{KafkaConsumer, KafkaProducer}
 import model.{ApplicationLogs, JobConfig}
 import org.apache.flink.streaming.api.scala.{DataStream, _}
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
-import pureconfig.error.ConfigReaderFailures
 import pureconfig.ConfigSource
+import pureconfig.error.ConfigReaderFailures
 import runners.{FlinkRunner, backend}
 import serde.{KafkaSimpleDeserializer, KafkaSimpleSerializer}
-import pureconfig.generic.auto._
-import io.circe.syntax._
+
 import scala.util.{Failure, Success, Try}
 
 object Job extends LazyLogging {

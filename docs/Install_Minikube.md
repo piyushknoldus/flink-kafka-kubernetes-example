@@ -23,7 +23,7 @@ commit: 5664228288552de9f3a446ea4f51c6f29bbdd0e0-dirty
 
 ### Configure Minikube
 
-Start Minikube ( with 3 cpu's and 12Gb Ram)
+Start Minikube ( with 2 cpu's and 6Gb Ram)
 
 `minikube start --cpus 2 --memory 6000`
 

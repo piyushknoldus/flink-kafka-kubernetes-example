@@ -4,22 +4,22 @@ metadata:
   name: flinkjobcluster-sample
 spec:
   image:
-    name: flink:1.10.1-scala_2.12
+    name: piyushdocker/flink_kakfa_kubeexample
   envVars:
     - name: CHECK_POINTING_PATH
       value: "file:///tmp/"
     - name: FLINK_LOG_PREFIX
       value: "/opt/flink/"
     - name: KAFKA_HOST
-      value: "kafka-host"
+      value: "kafka-cp-kafka.default"
     - name: KAFKA_PORT
-      value: "9094"
+      value: "9092"
   jobManager:
     ports:
       ui: 8081
     resources:
       limits:
-        memory: "1024Mi"
+        memory: "600Mi"
         cpu: "200m"
   taskManager:
     replicas: 1
@@ -28,12 +28,12 @@ spec:
         memory: "2048Mi"
         cpu: "400m"
   job:
-    jarFile: ./examples/streaming/WordCount.jar
-    className: org.apache.flink.streaming.examples.wordcount.WordCount
+    jarFile: /opt/flink/app.jar
+    className: Job
     parallelism: 1
     resources:
       limits:
-        memory: "1024Mi"
+        memory: "500Mi"
         cpu: "200m"
   flinkProperties:
     taskmanager.numberOfTaskSlots: "1"
