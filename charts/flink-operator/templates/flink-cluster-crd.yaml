@@ -1388,6 +1388,7 @@ spec:
                         type: string
                     required:
                     - containerPort
+                    - protocol
                     type: object
                   type: array
                 ingress:
@@ -3188,6 +3189,7 @@ spec:
                         type: string
                     required:
                     - containerPort
+                    - protocol
                     type: object
                   type: array
                 initContainers:
