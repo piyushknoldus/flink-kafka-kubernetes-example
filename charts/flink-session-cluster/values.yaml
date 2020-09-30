@@ -1,0 +1,41 @@
+name: flink-session-cluster
+image:
+  repository: piyushdocker/flink_kakfa_kubeexample
+  tag: latest
+  pullPolicy: Always
+  imagePullSecrets: ""
+
+port: 8081
+
+jobmanager:
+  resources:
+    limits:
+      cpu: "200m"
+      memory: "600Mi"
+    requests:
+      cpu: "200m"
+      memory: "600Mi"
+  nodeSelector: {}
+
+taskmanager:
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: "400m"
+      memory: "2Gi"
+    requests:
+      cpu: "400m"
+      memory: "2Gi"
+  nodeSelector: {}
+
+flinkProperties:
+  configurationOverrides:
+    taskmanager.numberOfTaskSlots: "2"
+    classloader.resolve-order: "parent-first"
+    s3.path.style.access: true
+    env.log.dir: /opt/flink/log
+
+env:
+  CHECK_POINTING_PATH: "file:///tmp/"
+  KAFKA_HOST: "kafka-cp-kafka.default"
+  KAFKA_PORT: 9092

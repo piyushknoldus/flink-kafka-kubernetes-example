@@ -7,11 +7,12 @@ import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, Produce
 object KafkaDummyProducer extends LazyLogging {
 
   def sampleAppLogOne(inc: Int): String =
-    s"""{"appName": "flinkKafkaDemo",
+    s"""{
+       |"appName": "flinkKafkaDemo",
        | "dateTime": ${Instant.now().getEpochSecond},
        |  "logType": "info",
        |   "msg": "this is $inc demo log message"
-       |   }""".stripMargin
+       |}""".stripMargin
 
   val msgToGenerate = 5
 
