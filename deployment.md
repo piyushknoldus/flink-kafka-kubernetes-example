@@ -29,7 +29,7 @@ Check their status
 
 
 ### Install Flink Job cluster
-`helm install --name flink-kafka-job-cluster charts/flink-job-cluster -n flink`
+`helm install flink-kafka-job-cluster charts/flink-job-cluster -n flink`
 
 Apply watch to see the pods related to flink cluster as they will be terminated once the job is completed. 
 
@@ -39,4 +39,4 @@ Once the pod comes to the completed stage you can check the output of the job
 `kubectl logs $(kubectl get po -o name -n flink | grep flinkjobcluster-sample-job) -n flink -f`
 
 ### Install Flink Session cluster
-`helm install --name flink-session-cluster charts/flink-session-cluster -n flink`
+`helm install flink-session-cluster charts/flink-session-cluster -n flink`
